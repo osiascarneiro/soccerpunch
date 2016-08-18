@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Prototype</title>
+        <script src="//cdn.jsdelivr.net/phaser/2.5.0/phaser.min.js"></script>
+    </head>
+    <body>
+
+    <script type="text/javascript">
+
+    window.onload = function() {
+
+			//  Note that this html file is set to pull down Phaser 2.5.0 from the JS Delivr CDN.
+			//  Although it will work fine with this tutorial, it's almost certainly not the most current version.
+			//  Be sure to replace it with an updated version before you start experimenting with adding your own code.
+
+		var game = new Phaser.Game(600, 800, Phaser.AUTO, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+		var player;
+
+		function preload() {
+
+			//  37x45 is the size of each frame
+
+			//  There are 18 frames in the PNG - you can leave this value blank if the frames fill up the entire PNG, but in this case there are some
+			//  blank frames at the end, so we tell the loader how many to load
+
+			game.load.spritesheet('player', 'assets/sprites/player2.png', 32, 48, 16);
+
+		}
+
+		function create() {
+			
+			game.stage.backgroundColor = '#4d4d4d';
+
+			// Stretch to fill
+			//game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
+			// Keep original size
+			game.scale.fullScreenScaleMode = Phaser.ScaleManager.NO_SCALE;
+			// Maintain aspect ratio
+			//game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
+
+			game.input.onDown.add(gofull, this);
+			
+			
+
+			player = game.add.sprite(300, 200, 'player');
+			
+			//  Here we add a new animation called 'walk'
+			//  Because we didn't give any other parameters it's going to make an animation from all available frames in the 'mummy' sprite sheet
+			var walkdown = player.animations.add('walkdown', [0,1,2,3], 4, true);
+			var walkleft = player.animations.add('walkleft', [4,5,6,7], 4, true);
+			var walkright = player.animations.add('walkright', [8,9,10,11], 4, true);
+			var walkup = player.animations.add('walkup', [12,13,14,15], 4, true);
+
+			//  And this starts the animation playing by using its key ("walk")
+			//  30 is the frame rate (30fps)
+			//  true means it will loop when it finishes
+			player.animations.play('walkup', 4, true);
+
+		}
+		
+		function update() {
+		
+			player.y -= 2;
+
+			if (player.y < -player.width)
+			{
+				player.y = game.world.width;
+			}
+
+		}
+
+		function render () {
+
+			// game.debug.text('Click / Tap to go fullscreen', 270, 16);
+			// game.debug.text('Click / Tap to go fullscreen', 0, 16);
+
+			game.debug.inputInfo(32, 32);
+			// game.debug.pointer(game.input.activePointer);
+
+		}
+
+		function gofull() {
+
+			if (game.scale.isFullScreen)
+			{
+				game.scale.stopFullScreen();
+			}
+			else
+			{
+				game.scale.startFullScreen(true);
+			}
+		}
+
+    };
+
+    </script>
+
+    </body>
+</html>
